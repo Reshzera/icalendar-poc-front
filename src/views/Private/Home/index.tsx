@@ -72,7 +72,7 @@ const Home: React.FC = () => {
         </p>
       </HomeDescription>
 
-      <Calendar appointments={calendarAppoinments} />
+      <Calendar appointments={calendarAppoinments} type="month" />
     </HomeContainer>
   );
 };
