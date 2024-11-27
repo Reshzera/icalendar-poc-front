@@ -14,8 +14,8 @@ export type UpdateAppointmentDto = {
 
 export type AppointmentFromApi = {
   id: string;
-  start: Date;
-  end: Date;
+  start: string;
+  end: string;
   users: UserFromApi[];
 };
 

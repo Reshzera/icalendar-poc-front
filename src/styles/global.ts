@@ -14,4 +14,19 @@ export default createGlobalStyle`
     color: #f5f5f5;
     font-family: sans-serif;
   }
+
+
+  * {
+    scrollbar-width: auto;
+    scrollbar-color: #555 #101010;
+  }
+
+  *::-webkit-scrollbar {
+    width: 16px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #101010;
+  }
+
 `;
