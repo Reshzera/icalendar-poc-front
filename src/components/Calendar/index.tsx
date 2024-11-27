@@ -1,11 +1,10 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { CalendarContainer } from "./styles";
-import WeeklyHeader from "./components/CalendarHeader";
-import Navigation from "./components/Navigation";
 import { getWeekDates } from "../../utils/convert";
 import CalendarHeader from "./components/CalendarHeader";
 import MonthlyCalendar from "./components/MonthlyCalendarBody";
+import Navigation from "./components/Navigation";
 import WeeklyCalendarBody from "./components/WeeklyCalendarBody";
+import { CalendarContainer } from "./styles";
 
 // import { Container } from './styles';
 
@@ -24,7 +23,7 @@ type CalendarProps = {
 };
 
 const Calendar: React.FC<CalendarProps> = ({ appointments }) => {
-  const [selectedType, setSelectedType] = useState<CalendarType>("week");
+  const [selectedType] = useState<CalendarType>("week");
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const navigate = useCallback(

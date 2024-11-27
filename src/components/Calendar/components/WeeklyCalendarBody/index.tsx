@@ -1,9 +1,8 @@
 import React from "react";
+import { Appointments } from "../..";
 import DayColumn from "../DayColumn";
 import HoursColumn from "../HoursColumn";
 import { WeeklyCalendarBodyContainer } from "./styles";
-import { AppointmentFromApi } from "../../../../services/types/appointment";
-import { Appointments } from "../..";
 
 // import { Container } from './styles';
 
@@ -13,7 +12,6 @@ type WeeklyCalendarBodyProps = {
 };
 
 const WeeklyCalendarBody: React.FC<WeeklyCalendarBodyProps> = ({
-  currentDate,
   appointments,
 }) => {
   return (

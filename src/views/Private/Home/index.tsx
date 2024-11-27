@@ -1,19 +1,17 @@
+import { faker } from "@faker-js/faker";
 import React from "react";
+import { BiCalendar } from "react-icons/bi";
+import Calendar, { Appointments } from "../../../components/Calendar";
 import useAuth from "../../../hooks/useAuth";
+import useHomeController from "../../controllers/Home/useHomeController";
 import {
   HomeContainer,
+  HomeDescription,
   HomeHeader,
   HomeLogo,
-  HomeDescription,
   HomeTitle,
   LogoutButton,
 } from "./styles";
-import { BiCalendar } from "react-icons/bi";
-import useHomeController from "../../controllers/Home/useHomeController";
-import Calendar, { Appointments } from "../../../components/Calendar";
-import { AppointmentFromApi } from "../../../services/types/appointment";
-import { faker } from "@faker-js/faker";
-import { UserFromApi } from "../../../services/types/user";
 // import { Container } from './styles';
 
 const MockAppointments = Array.from({ length: 10 }).map((_, index) => ({
@@ -38,7 +36,7 @@ const MockAppointments = Array.from({ length: 10 }).map((_, index) => ({
 }));
 
 const Home: React.FC = () => {
-  const { appointments, isLoadingAppointments } = useHomeController();
+  const { appointments } = useHomeController();
   const { user, signout } = useAuth();
 
   console.log(appointments?.appointments);
