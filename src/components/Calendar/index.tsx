@@ -5,7 +5,6 @@ import MonthlyCalendar from "./components/MonthlyCalendarBody";
 import Navigation from "./components/Navigation";
 import WeeklyCalendarBody from "./components/WeeklyCalendarBody";
 import { CalendarContainer } from "./styles";
-import { set } from "zod";
 
 // import { Container } from './styles';
 
