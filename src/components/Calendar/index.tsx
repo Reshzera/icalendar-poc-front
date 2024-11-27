@@ -5,6 +5,7 @@ import MonthlyCalendar from "./components/MonthlyCalendarBody";
 import Navigation from "./components/Navigation";
 import WeeklyCalendarBody from "./components/WeeklyCalendarBody";
 import { CalendarContainer } from "./styles";
+import { set } from "zod";
 
 // import { Container } from './styles';
 
@@ -20,10 +21,11 @@ const defaultDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 type CalendarProps = {
   appointments: Appointments[];
+  type: CalendarType;
 };
 
-const Calendar: React.FC<CalendarProps> = ({ appointments }) => {
-  const [selectedType] = useState<CalendarType>("week");
+const Calendar: React.FC<CalendarProps> = ({ appointments, type }) => {
+  const [selectedType, setSelectedType] = useState<CalendarType>(type);
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const navigate = useCallback(
@@ -103,23 +105,39 @@ const Calendar: React.FC<CalendarProps> = ({ appointments }) => {
   }, [currentDate, selectedType]);
 
   return (
-    <CalendarContainer>
-      <CalendarHeader labels={headerLabels} selectedType={selectedType} />
-      <Navigation label={controlHeader} navigate={navigate} />
+    <>
+      <button
+        onClick={() => {
+          setSelectedType("month");
+        }}
+      >
+        Month
+      </button>
+      <button
+        onClick={() => {
+          setSelectedType("week");
+        }}
+      >
+        Week
+      </button>
+      <CalendarContainer>
+        <CalendarHeader labels={headerLabels} selectedType={selectedType} />
+        <Navigation label={controlHeader} navigate={navigate} />
 
-      {selectedType === "month" && (
-        <MonthlyCalendar
-          currentDate={currentDate}
-          appointments={appointments}
-        />
-      )}
-      {selectedType === "week" && (
-        <WeeklyCalendarBody
-          currentDate={currentDate}
-          appointments={appointments}
-        />
-      )}
-    </CalendarContainer>
+        {selectedType === "month" && (
+          <MonthlyCalendar
+            currentDate={currentDate}
+            appointments={appointments}
+          />
+        )}
+        {selectedType === "week" && (
+          <WeeklyCalendarBody
+            currentDate={currentDate}
+            appointments={appointments}
+          />
+        )}
+      </CalendarContainer>
+    </>
   );
 };
 
