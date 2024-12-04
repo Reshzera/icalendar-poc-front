@@ -5,6 +5,7 @@ import MonthlyCalendar from "./components/MonthlyCalendarBody";
 import Navigation from "./components/Navigation";
 import WeeklyCalendarBody from "./components/WeeklyCalendarBody";
 import { CalendarContainer } from "./styles";
+import DailyCalendarBody from "./components/DayCalendarBody";
 
 // import { Container } from './styles';
 
@@ -48,6 +49,7 @@ const Calendar: React.FC<CalendarProps> = ({ appointments, type }) => {
     },
     [currentDate, selectedType, setCurrentDate]
   );
+  const week = getWeekDates(currentDate);
 
   const headerLabels = useMemo(() => {
     if (selectedType === "day") {
@@ -60,8 +62,6 @@ const Calendar: React.FC<CalendarProps> = ({ appointments, type }) => {
     }
 
     if (selectedType === "week") {
-      const week = getWeekDates(currentDate);
-
       return week.map((date) =>
         date.toLocaleDateString("default", {
           weekday: "short",
@@ -119,6 +119,14 @@ const Calendar: React.FC<CalendarProps> = ({ appointments, type }) => {
       >
         Week
       </button>
+
+      <button
+        onClick={() => {
+          setSelectedType("day");
+        }}
+      >
+        Day
+      </button>
       <CalendarContainer>
         <CalendarHeader labels={headerLabels} selectedType={selectedType} />
         <Navigation label={controlHeader} navigate={navigate} />
@@ -131,6 +139,13 @@ const Calendar: React.FC<CalendarProps> = ({ appointments, type }) => {
         )}
         {selectedType === "week" && (
           <WeeklyCalendarBody
+            week={week}
+            currentDate={currentDate}
+            appointments={appointments}
+          />
+        )}
+        {selectedType === "day" && (
+          <DailyCalendarBody
             currentDate={currentDate}
             appointments={appointments}
           />

@@ -8,17 +8,23 @@ import { WeeklyCalendarBodyContainer } from "./styles";
 
 type WeeklyCalendarBodyProps = {
   currentDate: Date;
+  week: Date[];
   appointments: Appointments[];
 };
 
 const WeeklyCalendarBody: React.FC<WeeklyCalendarBodyProps> = ({
+  week,
   appointments,
 }) => {
   return (
     <WeeklyCalendarBodyContainer>
       <HoursColumn />
-      {Array.from({ length: 7 }).map((_, index) => (
-        <DayColumn key={index} appointments={appointments} />
+      {week.map((date) => (
+        <DayColumn
+          key={date.getTime()}
+          appointments={appointments}
+          currentDate={date}
+        />
       ))}
     </WeeklyCalendarBodyContainer>
   );

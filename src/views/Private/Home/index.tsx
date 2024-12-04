@@ -14,26 +14,36 @@ import {
 } from "./styles";
 // import { Container } from './styles';
 
-const MockAppointments = Array.from({ length: 10 }).map((_, index) => ({
-  id: `${index}`,
-  start: faker.date
-    .recent({
-      days: 10,
-    })
-    .toISOString(),
-  end: faker.date
-    .recent({
-      days: 10,
-    })
-    .toISOString(),
-  users: faker.helpers.arrayElements(
-    Array.from({ length: 5 }).map((_, index) => ({
-      id: `${index}`,
-      name: faker.person.firstName(),
-      email: faker.internet.email(),
-    }))
-  ),
-}));
+const MockAppointments = Array.from({ length: 10 }).map((_, index) => {
+  const randomDate = faker.date.recent({
+    days: 10,
+  });
+  const endOfDay = new Date(randomDate);
+  endOfDay.setHours(23, 59, 59, 999);
+
+  const startDate = faker.date.between({
+    from: randomDate,
+    to: endOfDay,
+  });
+
+  const entDate = faker.date.between({
+    from: startDate,
+    to: endOfDay,
+  });
+
+  return {
+    id: `${index}`,
+    start: startDate.toISOString(),
+    end: entDate.toISOString(),
+    users: faker.helpers.arrayElements(
+      Array.from({ length: 5 }).map((_, index) => ({
+        id: `${index}`,
+        name: faker.person.firstName(),
+        email: faker.internet.email(),
+      }))
+    ),
+  };
+});
 
 const Home: React.FC = () => {
   const { appointments } = useHomeController();

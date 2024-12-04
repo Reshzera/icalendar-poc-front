@@ -93,3 +93,12 @@ export function getMonthDays(currentDate: Date): Day[] {
 
   return daysOfThePastMonth.concat(daysOfTheCurrentMonth, daysOfTheNextMonth);
 }
+
+export function getFormattedHour(date: Date | string): string {
+  const hour = typeof date === "string" ? new Date(date) : date;
+
+  return hour.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "numeric",
+  });
+}

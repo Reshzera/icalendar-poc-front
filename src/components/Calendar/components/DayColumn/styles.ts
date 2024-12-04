@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const DayColumnContainer = styled.div`
   position: relative;
-  overflow-y: auto;
+  overflow-y: hidden;
 
   border-left: 1px solid #999;
 `;
@@ -20,8 +20,15 @@ export const DayHours = styled.div`
   }
 `;
 
-export const AppointmentsCard = styled.div`
-  top: 0;
+type PositionProps = {
+  top: number;
+  height: number;
+};
+
+export const AppointmentsCard = styled.div<PositionProps>`
+  top: ${({ top }) => top}%;
+  height: ${({ height }) => height}%;
+  min-height: max-content;
   left: 4px;
   right: 4px;
   position: absolute;
@@ -43,4 +50,18 @@ export const AppointmentsCard = styled.div`
   &:hover {
     opacity: 0.8;
   }
+  overflow: hidden;
+`;
+
+export const AppointmentHour = styled.div`
+  font-size: 14px;
+  width: 100%;
+  margin-top: 8px;
+`;
+
+export const AppointmentLabel = styled.div`
+  font-size: 14px;
+  width: 100%;
+  font-weight: bold;
+  color: #fff;
 `;

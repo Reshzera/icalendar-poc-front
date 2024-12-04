@@ -40,6 +40,8 @@ export const MonthlyCalendarDayIcon = styled.div<MonthlyCalendarDayIcon>`
   opacity: ${({ isCurrentMonth }) => (isCurrentMonth ? 1 : 0.3)};
   background-color: #101010;
 
+  aspect-ratio: 1/1;
+
   border-radius: 50%;
   padding: 0.25rem;
 
@@ -58,7 +60,7 @@ export const CalendarAppointment = styled.div`
 
   font-size: 0.75rem;
 
-  padding: 0.2rem;
+  padding: 0.3rem;
   border-radius: 1rem;
   background-color: #4287f5;
   width: 100%;

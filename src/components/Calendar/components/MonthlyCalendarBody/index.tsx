@@ -26,7 +26,7 @@ const MonthlyCalendarBody: React.FC<MonthlyCalendarBodyProps> = ({
   const appointmentsByDay = useMemo(() => {
     return appointments.reduce((acc, appointment) => {
       const date = new Date(appointment.start);
-      const day = date.getDate(); 
+      const day = date.getDate();
 
       if (date.getMonth() !== currentDate.getMonth()) {
         return acc;
@@ -56,11 +56,12 @@ const MonthlyCalendarBody: React.FC<MonthlyCalendarBodyProps> = ({
               {item.day}
             </MonthlyCalendarDayIcon>
 
-            {appointmentsByDay[item.day]?.map((appointment) => (
-              <CalendarAppointment key={appointment.start}>
-                {appointment.label}
-              </CalendarAppointment>
-            ))}
+            {item.type === "current" &&
+              appointmentsByDay[item.day]?.map((appointment) => (
+                <CalendarAppointment key={appointment.start}>
+                  {appointment.label}
+                </CalendarAppointment>
+              ))}
           </MonthlyCalendarDay>
         );
       })}

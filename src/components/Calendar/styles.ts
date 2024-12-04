@@ -10,4 +10,6 @@ export const CalendarContainer = styled.div`
   max-height: 800px;
 
   overflow: auto;
+
+  overscroll-behavior: contain;
 `;
