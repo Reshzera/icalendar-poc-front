@@ -24,7 +24,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return !!storedAccessToken;
   });
 
-  const { isError, isFetching, data } = useQuery({
+  const { isError, isFetching, data, isSuccess } = useQuery({
     queryKey: ["users", "me"],
     queryFn: () => userModule.getCurrentUser(),
     enabled: signedIn,
@@ -54,8 +54,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   return (
     <AuthContext.Provider
       value={{
-        // signedIn: signedIn && isSuccess,
-        signedIn: true,
+        signedIn: signedIn && isSuccess,
         user: data,
         signin,
         signout,
