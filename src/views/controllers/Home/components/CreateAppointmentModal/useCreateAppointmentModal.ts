@@ -113,7 +113,7 @@ export default function useCreateAppointmentModal({
         e.response?.data.unavailableUsers.forEach((user) => {
           toast.error(`User ${user.email} is not available`);
         });
-        console.log("bestSuggestedTime", bestSuggestedTime);
+
         if (bestSuggestedTime) {
           const date = new Date(bestSuggestedTime);
           const oneMinute = 60 * 1000;
