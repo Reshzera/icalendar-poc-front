@@ -20,9 +20,9 @@ const queryClient = new QueryClient({
 const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
+      <GlobalStyle />
+      <ToastContainer />
       <AuthProvider>
-        <GlobalStyle />
-        <ToastContainer />
         <Router />
       </AuthProvider>
     </QueryClientProvider>

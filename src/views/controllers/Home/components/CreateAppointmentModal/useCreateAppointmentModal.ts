@@ -7,6 +7,8 @@ import appointmentModule from "../../../../../services/modules/appointmentModule
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import userModule from "../../../../../services/modules/userModule";
 import { AppointmentToEdit } from "../../../../Private/Home/components/CreateAppointmentModal";
+import { isErrorFromApi } from "../../../../../services/httpClient";
+import { toast } from "react-toastify";
 
 type createAppointmentModalHook = {
   appointmentToEdit?: AppointmentToEdit;
@@ -88,10 +90,29 @@ export default function useCreateAppointmentModal({
         queryKey: ["users", "appointments"],
       });
       onClose();
-    } catch {
+    } catch (e) {
+      if (!isErrorFromApi(e)) {
+        setError("users", {
+          type: "manual",
+          message: "Unexpected error",
+        });
+        return;
+      }
+
+      if (!!e.response?.data.unavailableUsers) {
+        e.response?.data.unavailableUsers.forEach((user) => {
+          toast.error(`User ${user.email} is not available`);
+        });
+        setError("users", {
+          type: "manual",
+          message: "Unavailable users",
+        });
+        return;
+      }
+
       setError("users", {
         type: "manual",
-        message: "Unexpected error",
+        message: e.response?.data.message,
       });
     }
   };

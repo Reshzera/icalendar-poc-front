@@ -4,6 +4,7 @@ import { LocalStorageKeys } from "../constants/localstorage";
 import { toast } from "react-toastify";
 import userModule from "../services/modules/userModule";
 import { UserFromApi } from "../services/types/user";
+import SplashScreen from "../layout/SplashScreen";
 
 interface AuthContextValue {
   signedIn: boolean;
@@ -60,7 +61,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         signout,
       }}
     >
-      {isFetching && <h1>Loading...</h1>}
+      {isFetching && <SplashScreen />}
       {!isFetching && children}
     </AuthContext.Provider>
   );
