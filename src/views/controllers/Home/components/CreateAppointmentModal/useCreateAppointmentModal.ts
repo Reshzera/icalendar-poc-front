@@ -9,6 +9,7 @@ import userModule from "../../../../../services/modules/userModule";
 import { AppointmentToEdit } from "../../../../Private/Home/components/CreateAppointmentModal";
 import { isErrorFromApi } from "../../../../../services/httpClient";
 import { toast } from "react-toastify";
+import { getFormattedHour } from "../../../../../utils/convert";
 
 type createAppointmentModalHook = {
   appointmentToEdit?: AppointmentToEdit;
@@ -100,9 +101,29 @@ export default function useCreateAppointmentModal({
       }
 
       if (!!e.response?.data.unavailableUsers) {
+        const bestSuggestedTime = e.response?.data.unavailableUsers.reduce(
+          (acc: Date | undefined, user) => {
+            if (!acc) return user.suggestedTime;
+
+            return user.suggestedTime < acc ? user.suggestedTime : acc;
+          },
+          undefined
+        );
+
         e.response?.data.unavailableUsers.forEach((user) => {
           toast.error(`User ${user.email} is not available`);
         });
+        console.log("bestSuggestedTime", bestSuggestedTime);
+        if (bestSuggestedTime) {
+          const date = new Date(bestSuggestedTime);
+          const oneMinute = 60 * 1000;
+          const realBestTime = new Date(date.getTime() + oneMinute);
+
+          toast.info(
+            `Best suggested time is ${getFormattedHour(realBestTime)}`
+          );
+        }
+
         setError("users", {
           type: "manual",
           message: "Unavailable users",

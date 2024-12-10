@@ -2,8 +2,12 @@ import axios from "axios";
 import { LocalStorageKeys } from "../constants/localstorage";
 import { UserFromApi } from "./types/user";
 
+type UnavailableUser = UserFromApi & {
+  suggestedTime: Date;
+};
+
 type ApiErrorResponse = {
-  unavailableUsers: UserFromApi[];
+  unavailableUsers: UnavailableUser[];
   message: string;
   statusCode: number;
 };
