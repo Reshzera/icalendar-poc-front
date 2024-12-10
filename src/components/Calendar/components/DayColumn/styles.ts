@@ -36,6 +36,8 @@ export const AppointmentsCard = styled.div<PositionProps>`
   flex-direction: column;
   align-items: center;
 
+  cursor: pointer;
+
   padding: 8px;
   margin: 4px 0;
 

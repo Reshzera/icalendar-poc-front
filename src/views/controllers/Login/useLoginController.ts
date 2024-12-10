@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { LoginFormData, loginFormResolver } from "./loginFormValidation";
 import authModule from "../../../services/modules/authModule";
 import useAuth from "../../../hooks/useAuth";
+import { useMutation } from "@tanstack/react-query";
 
 export default function useLoginController() {
   const { signin } = useAuth();
@@ -14,12 +15,13 @@ export default function useLoginController() {
     resolver: loginFormResolver,
   });
 
+  const { mutateAsync: login, isPending } = useMutation({
+    mutationFn: (data: LoginFormData) => authModule.login(data),
+  });
+
   const onSubmit = async (data: LoginFormData) => {
     try {
-      const { accessToken } = await authModule.login({
-        email: data.email,
-        password: data.password,
-      });
+      const { accessToken } = await login(data);
 
       signin(accessToken);
     } catch {
@@ -34,5 +36,6 @@ export default function useLoginController() {
     register,
     handleSubmit: handleSubmit(onSubmit),
     errors,
+    isLoading: isPending,
   };
 }

@@ -3,6 +3,7 @@ import { signUpFormData, signUpFormResolver } from "./signUpFormValidation";
 import authModule from "../../../services/modules/authModule";
 import useAuth from "../../../hooks/useAuth";
 import userModule from "../../../services/modules/userModule";
+import { useMutation } from "@tanstack/react-query";
 
 export default function useSignUpController() {
   const { signin } = useAuth();
@@ -15,18 +16,19 @@ export default function useSignUpController() {
     resolver: signUpFormResolver,
   });
 
+  const { mutateAsync: createUser, isPending: isCreateUserPending } =
+    useMutation({
+      mutationFn: (data: signUpFormData) => userModule.createUser(data),
+    });
+
+  const { mutateAsync: login, isPending: isLoginPending } = useMutation({
+    mutationFn: (data: signUpFormData) => authModule.login(data),
+  });
+
   const onSubmit = async (data: signUpFormData) => {
     try {
-      await userModule.createUser({
-        email: data.email,
-        password: data.password,
-        name: data.name,
-      });
-
-      const { accessToken } = await authModule.login({
-        email: data.email,
-        password: data.password,
-      });
+      await createUser(data);
+      const { accessToken } = await login(data);
 
       signin(accessToken);
     } catch {
@@ -41,5 +43,6 @@ export default function useSignUpController() {
     register,
     handleSubmit: handleSubmit(onSubmit),
     errors,
+    isLoading: isCreateUserPending || isLoginPending,
   };
 }

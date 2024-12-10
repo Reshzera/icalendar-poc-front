@@ -13,11 +13,13 @@ import { Appointments } from "../..";
 type MonthlyCalendarBodyProps = {
   currentDate: Date;
   appointments: Appointments[];
+  onAppointmentClick: (appointment: Appointments) => void;
 };
 
 const MonthlyCalendarBody: React.FC<MonthlyCalendarBodyProps> = ({
   currentDate,
   appointments,
+  onAppointmentClick,
 }) => {
   const daysArray = useMemo(() => {
     return getMonthDays(currentDate);
@@ -58,7 +60,12 @@ const MonthlyCalendarBody: React.FC<MonthlyCalendarBodyProps> = ({
 
             {item.type === "current" &&
               appointmentsByDay[item.day]?.map((appointment) => (
-                <CalendarAppointment key={appointment.start}>
+                <CalendarAppointment
+                  key={appointment.start}
+                  onClick={() => {
+                    onAppointmentClick(appointment);
+                  }}
+                >
                   {appointment.label}
                 </CalendarAppointment>
               ))}

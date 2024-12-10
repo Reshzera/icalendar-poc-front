@@ -23,6 +23,7 @@ export const InputContainer = styled.div`
   position: relative;
 
   input {
+    color-scheme: dark;
     outline: none;
     border: 1px solid #f5f5f5;
 

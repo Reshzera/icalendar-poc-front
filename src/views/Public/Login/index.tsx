@@ -9,10 +9,11 @@ import {
 import calendarImage from "../../../assets/calendar.webp";
 import Input from "../../../components/Input";
 import useLoginController from "../../controllers/Login/useLoginController";
+import { ThreeCircles } from "react-loader-spinner";
 // import { Container } from './styles';
 
 const Login: React.FC = () => {
-  const { register, handleSubmit, errors } = useLoginController();
+  const { register, handleSubmit, errors, isLoading } = useLoginController();
   return (
     <LoginContainer>
       <LoginImage>
@@ -35,7 +36,18 @@ const Login: React.FC = () => {
             {...register("password")}
           />
 
-          <button type="submit">Login</button>
+          <button type="submit">
+            {!isLoading ? (
+              "Login"
+            ) : (
+              <ThreeCircles
+                visible={true}
+                height="20"
+                width="20"
+                color="#232426"
+              />
+            )}
+          </button>
         </LoginForm>
         <SignUpLink to={"/signup"}>Create an account</SignUpLink>
       </LoginFormContainer>

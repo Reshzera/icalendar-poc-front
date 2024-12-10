@@ -14,3 +14,7 @@ export type UserFromApi = {
   email: string;
   name: string;
 };
+
+export type UsersListFromApi = {
+  users: UserFromApi[];
+};

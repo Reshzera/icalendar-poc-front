@@ -1,5 +1,10 @@
 import { httpClient } from "../httpClient"; // HTTP client configured for the backend
-import { CreateUserDto, UpdateUserDto, UserFromApi } from "../types/user";
+import {
+  CreateUserDto,
+  UpdateUserDto,
+  UserFromApi,
+  UsersListFromApi,
+} from "../types/user";
 
 class UserModule {
   /**
@@ -44,6 +49,19 @@ class UserModule {
    */
   async getCurrentUser(): Promise<UserFromApi> {
     const { data } = await httpClient.get<UserFromApi>("/user/me");
+    return data;
+  }
+
+  /**
+   * Retrieves a list of all users by sending a GET request to the backend.
+   *
+   * @returns {Promise<UsersListFromApi>} - An array containing data for all users.
+   * @example
+   * const allUsers = await userModule.getAllUsers();
+   * console.log(allUsers); // Outputs an array of user objects
+   */
+  async getAllUsers(): Promise<UsersListFromApi> {
+    const { data } = await httpClient.get<UsersListFromApi>("/user/all");
     return data;
   }
 }

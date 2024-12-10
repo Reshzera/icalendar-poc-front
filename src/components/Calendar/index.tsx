@@ -12,6 +12,7 @@ import DailyCalendarBody from "./components/DayCalendarBody";
 export type CalendarType = "day" | "week" | "month";
 
 export type Appointments = {
+  id: string;
   label: string;
   start: string;
   end: string;
@@ -22,10 +23,14 @@ const defaultDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 type CalendarProps = {
   appointments: Appointments[];
   type: CalendarType;
+  onAppointmentClick?: (appointment: Appointments) => void;
 };
 
-const Calendar: React.FC<CalendarProps> = ({ appointments, type }) => {
-  const [selectedType, setSelectedType] = useState<CalendarType>(type);
+const Calendar: React.FC<CalendarProps> = ({
+  appointments,
+  type,
+  onAppointmentClick = () => {},
+}) => {
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const navigate = useCallback(
@@ -33,26 +38,26 @@ const Calendar: React.FC<CalendarProps> = ({ appointments, type }) => {
       const newDate = new Date(currentDate);
       const directionValue = direction === "next" ? 1 : -1;
 
-      if (selectedType === "day") {
+      if (type === "day") {
         newDate.setDate(newDate.getDate() + directionValue);
       }
 
-      if (selectedType === "week") {
+      if (type === "week") {
         newDate.setDate(newDate.getDate() + 7 * directionValue);
       }
 
-      if (selectedType === "month") {
+      if (type === "month") {
         newDate.setMonth(newDate.getMonth() + directionValue);
       }
 
       setCurrentDate(newDate);
     },
-    [currentDate, selectedType, setCurrentDate]
+    [currentDate, type, setCurrentDate]
   );
   const week = getWeekDates(currentDate);
 
   const headerLabels = useMemo(() => {
-    if (selectedType === "day") {
+    if (type === "day") {
       return [
         currentDate.toLocaleDateString("default", {
           weekday: "short",
@@ -61,7 +66,7 @@ const Calendar: React.FC<CalendarProps> = ({ appointments, type }) => {
       ];
     }
 
-    if (selectedType === "week") {
+    if (type === "week") {
       return week.map((date) =>
         date.toLocaleDateString("default", {
           weekday: "short",
@@ -71,10 +76,10 @@ const Calendar: React.FC<CalendarProps> = ({ appointments, type }) => {
     }
 
     return defaultDays;
-  }, [selectedType, currentDate]);
+  }, [type, currentDate]);
 
   const controlHeader = useMemo(() => {
-    if (selectedType === "day") {
+    if (type === "day") {
       return currentDate.toLocaleDateString("default", {
         weekday: "long",
         day: "numeric",
@@ -82,7 +87,7 @@ const Calendar: React.FC<CalendarProps> = ({ appointments, type }) => {
       });
     }
 
-    if (selectedType === "week") {
+    if (type === "week") {
       const week = getWeekDates(currentDate);
 
       const firstWeekDay = week[0].toLocaleDateString("default", {
@@ -101,57 +106,36 @@ const Calendar: React.FC<CalendarProps> = ({ appointments, type }) => {
       month: "long",
       year: "numeric",
     });
-  }, [currentDate, selectedType]);
+  }, [currentDate, type]);
 
   return (
-    <>
-      <button
-        onClick={() => {
-          setSelectedType("month");
-        }}
-      >
-        Month
-      </button>
-      <button
-        onClick={() => {
-          setSelectedType("week");
-        }}
-      >
-        Week
-      </button>
+    <CalendarContainer>
+      <CalendarHeader labels={headerLabels} selectedType={type} />
+      <Navigation label={controlHeader} navigate={navigate} />
 
-      <button
-        onClick={() => {
-          setSelectedType("day");
-        }}
-      >
-        Day
-      </button>
-      <CalendarContainer>
-        <CalendarHeader labels={headerLabels} selectedType={selectedType} />
-        <Navigation label={controlHeader} navigate={navigate} />
-
-        {selectedType === "month" && (
-          <MonthlyCalendar
-            currentDate={currentDate}
-            appointments={appointments}
-          />
-        )}
-        {selectedType === "week" && (
-          <WeeklyCalendarBody
-            week={week}
-            currentDate={currentDate}
-            appointments={appointments}
-          />
-        )}
-        {selectedType === "day" && (
-          <DailyCalendarBody
-            currentDate={currentDate}
-            appointments={appointments}
-          />
-        )}
-      </CalendarContainer>
-    </>
+      {type === "month" && (
+        <MonthlyCalendar
+          currentDate={currentDate}
+          appointments={appointments}
+          onAppointmentClick={onAppointmentClick}
+        />
+      )}
+      {type === "week" && (
+        <WeeklyCalendarBody
+          week={week}
+          currentDate={currentDate}
+          appointments={appointments}
+          onAppointmentClick={onAppointmentClick}
+        />
+      )}
+      {type === "day" && (
+        <DailyCalendarBody
+          currentDate={currentDate}
+          appointments={appointments}
+          onAppointmentClick={onAppointmentClick}
+        />
+      )}
+    </CalendarContainer>
   );
 };
 

@@ -9,10 +9,11 @@ import {
 import calendarImage from "../../../assets/calendar.webp";
 import Input from "../../../components/Input";
 import useSignUpController from "../../controllers/SignUp/useSignUpController";
+import { ThreeCircles } from "react-loader-spinner";
 // import { Container } from './styles';
 
 const SignUp: React.FC = () => {
-  const { register, handleSubmit, errors } = useSignUpController();
+  const { register, handleSubmit, errors, isLoading } = useSignUpController();
   return (
     <SignUpContainer>
       <SignUpImage>
@@ -45,7 +46,18 @@ const SignUp: React.FC = () => {
             error={errors.confirmPassword?.message}
             {...register("confirmPassword")}
           />
-          <button type="submit">Entrar</button>
+          <button type="submit">
+            {!isLoading ? (
+              "Sign Up"
+            ) : (
+              <ThreeCircles
+                visible={true}
+                height="20"
+                width="20"
+                color="#232426"
+              />
+            )}
+          </button>
         </SignUpForm>
         <LoginLink to={"/login"}>
           Already have an account? <span>Login</span>

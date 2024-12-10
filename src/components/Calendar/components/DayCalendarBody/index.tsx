@@ -8,18 +8,20 @@ import { DailyCalendarBodyContainer } from "./styles";
 
 type DailyCalendarBodyProps = {
   currentDate: Date;
-
+  onAppointmentClick: (appointment: Appointments) => void;
   appointments: Appointments[];
 };
 
 const DailyCalendarBody: React.FC<DailyCalendarBodyProps> = ({
   currentDate,
   appointments,
+  onAppointmentClick,
 }) => {
   return (
     <DailyCalendarBodyContainer>
       <HoursColumn />
       <DayColumn
+        onAppointmentClick={onAppointmentClick}
         key={currentDate.getTime()}
         appointments={appointments}
         currentDate={currentDate}

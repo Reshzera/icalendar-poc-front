@@ -14,6 +14,7 @@ import {
 type DayColumnProps = {
   appointments: Appointments[];
   currentDate: Date;
+  onAppointmentClick: (appointment: Appointments) => void;
 };
 
 type PositionProps = {
@@ -21,7 +22,11 @@ type PositionProps = {
   endDate: string;
 };
 
-const DayColumn: React.FC<DayColumnProps> = ({ appointments, currentDate }) => {
+const DayColumn: React.FC<DayColumnProps> = ({
+  appointments,
+  currentDate,
+  onAppointmentClick,
+}) => {
   const getPosition = ({ endDate, startDate }: PositionProps) => {
     const startDay = new Date(currentDate).setHours(0, 0, 0, 0);
     const endDay = new Date(currentDate).setHours(23, 59, 59, 999);
@@ -63,6 +68,7 @@ const DayColumn: React.FC<DayColumnProps> = ({ appointments, currentDate }) => {
             key={`${appointment.start}${top}`}
             height={height}
             top={top}
+            onClick={() => onAppointmentClick(appointment)}
           >
             <AppointmentLabel>{appointment.label}</AppointmentLabel>
 

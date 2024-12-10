@@ -10,11 +10,13 @@ type WeeklyCalendarBodyProps = {
   currentDate: Date;
   week: Date[];
   appointments: Appointments[];
+  onAppointmentClick: (appointment: Appointments) => void;
 };
 
 const WeeklyCalendarBody: React.FC<WeeklyCalendarBodyProps> = ({
   week,
   appointments,
+  onAppointmentClick,
 }) => {
   return (
     <WeeklyCalendarBodyContainer>
@@ -24,6 +26,7 @@ const WeeklyCalendarBody: React.FC<WeeklyCalendarBodyProps> = ({
           key={date.getTime()}
           appointments={appointments}
           currentDate={date}
+          onAppointmentClick={onAppointmentClick}
         />
       ))}
     </WeeklyCalendarBodyContainer>

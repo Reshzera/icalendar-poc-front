@@ -1,10 +1,16 @@
-import { faker } from "@faker-js/faker";
-import React from "react";
+import React, { useState } from "react";
 import { BiCalendar } from "react-icons/bi";
-import Calendar, { Appointments } from "../../../components/Calendar";
+import Calendar, { CalendarType } from "../../../components/Calendar";
+import Modal from "../../../components/Modal";
+import Select from "../../../components/Select";
 import useAuth from "../../../hooks/useAuth";
 import useHomeController from "../../controllers/Home/useHomeController";
+import CreateAppointmentModal, {
+  AppointmentToEdit,
+} from "./components/CreateAppointmentModal";
 import {
+  CalendarControlContainer,
+  CreateEventButton,
   HomeContainer,
   HomeDescription,
   HomeHeader,
@@ -12,52 +18,40 @@ import {
   HomeTitle,
   LogoutButton,
 } from "./styles";
-// import { Container } from './styles';
 
-const MockAppointments = Array.from({ length: 10 }).map((_, index) => {
-  const randomDate = faker.date.recent({
-    days: 10,
-  });
-  const endOfDay = new Date(randomDate);
-  endOfDay.setHours(23, 59, 59, 999);
-
-  const startDate = faker.date.between({
-    from: randomDate,
-    to: endOfDay,
-  });
-
-  const entDate = faker.date.between({
-    from: startDate,
-    to: endOfDay,
-  });
-
-  return {
-    id: `${index}`,
-    start: startDate.toISOString(),
-    end: entDate.toISOString(),
-    users: faker.helpers.arrayElements(
-      Array.from({ length: 5 }).map((_, index) => ({
-        id: `${index}`,
-        name: faker.person.firstName(),
-        email: faker.internet.email(),
-      }))
-    ),
-  };
-});
+const CALENDAR_OPTIONS = [
+  {
+    value: "day",
+    label: "Day",
+  },
+  {
+    value: "week",
+    label: "Week",
+  },
+  {
+    value: "month",
+    label: "Month",
+  },
+];
 
 const Home: React.FC = () => {
-  const { appointments } = useHomeController();
+  const { appointments: appointmentsResponse } = useHomeController();
   const { user, signout } = useAuth();
 
-  console.log(appointments?.appointments);
+  const [selectedType, setSelectedType] = useState<CalendarType>("month");
+  const [openCreateEvent, setOpenCreateEvent] = useState<boolean>(false);
+  const [selectedAppointment, setSelectedAppointment] = useState<
+    AppointmentToEdit | undefined
+  >();
 
-  const calendarAppoinments: Appointments[] = MockAppointments.map(
-    (appointment) => ({
-      label: appointment.users.map((user) => user.name).join(", "),
-      start: appointment.start,
-      end: appointment.end,
-    })
-  );
+  const appointments = appointmentsResponse?.appointments ?? [];
+
+  const calendarAppointments = appointments.map((appointment) => ({
+    id: appointment.id,
+    label: appointment.users.map((user) => user.name).join(", "),
+    start: appointment.start,
+    end: appointment.end,
+  }));
 
   return (
     <HomeContainer>
@@ -81,8 +75,49 @@ const Home: React.FC = () => {
           manage events.
         </p>
       </HomeDescription>
+      <CalendarControlContainer>
+        <CreateEventButton onClick={() => setOpenCreateEvent(true)}>
+          Create Event
+        </CreateEventButton>
+        <Select
+          options={CALENDAR_OPTIONS}
+          value={selectedType}
+          onChange={(value) => setSelectedType(value as CalendarType)}
+        />
+      </CalendarControlContainer>
+      <Calendar
+        appointments={calendarAppointments}
+        type={selectedType}
+        onAppointmentClick={(appointment) => {
+          const selectedAppointment = appointments.find(
+            (item) => item.id === appointment.id
+          );
 
-      <Calendar appointments={calendarAppoinments} type="month" />
+          if (!selectedAppointment) return;
+
+          setSelectedAppointment({
+            end: new Date(selectedAppointment.end),
+            start: new Date(selectedAppointment.start),
+            id: selectedAppointment.id,
+            users: selectedAppointment.users.map((user) => user.id),
+          });
+          setOpenCreateEvent(true);
+        }}
+      />
+      <Modal
+        title="Create Event"
+        isOpen={openCreateEvent}
+        setIsOpen={setOpenCreateEvent}
+        children={
+          <CreateAppointmentModal
+            appointmentToEdit={selectedAppointment}
+            onClose={() => {
+              setOpenCreateEvent(false);
+              setSelectedAppointment(undefined);
+            }}
+          />
+        }
+      />
     </HomeContainer>
   );
 };
